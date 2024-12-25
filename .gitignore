@@ -47,4 +47,4 @@ Move.lock
 .vscode
 
 # Generated
-data/
+data

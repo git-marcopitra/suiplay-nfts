@@ -90,7 +90,7 @@ export const getNFTObjects = async ({
   log(results.length);
 
   const file = {
-    lasUpdateAt: Date.now(),
+    lastUpdateAt: Date.now(),
     holders: results,
   };
 
