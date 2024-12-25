@@ -1,7 +1,7 @@
 import {
   SUI_PLAY_NFT_PRE_ORDER_NFT_TYPE,
   SUI_PLAY_PRE_ORDER_REGISTRY_OBJECT_ID,
-} from './constants';
+} from "./constants";
 
 import {
   rpcClient,
@@ -9,10 +9,10 @@ import {
   parseSuiPlayRegistry,
   graphQLClient,
   writeFile,
-} from './utils';
+} from "./utils";
 
-import { queryNFTObjects } from './query';
-import { pathOr } from 'ramda';
+import { queryNFTObjects } from "./query";
+import { equals, pathOr } from "ramda";
 
 export const getSuiPlayNftRegistry = async () => {
   const obj = await rpcClient.getObject({
@@ -44,19 +44,19 @@ export const getNFTObjects = async ({
   return {
     pageInfo: {
       endCursor: pathOr(
-        '',
-        ['data', 'objects', 'pageInfo', 'endCursor'],
+        "",
+        ["data", "objects", "pageInfo", "endCursor"],
         result
       ),
       hasNextPage: pathOr(
         false,
-        ['data', 'objects', 'pageInfo', 'hasNextPage'],
+        ["data", "objects", "pageInfo", "hasNextPage"],
         result
       ),
     },
     nfts: pathOr([], ['data', 'objects', 'nodes'], result).map((node) => ({
       owner: pathOr('', ['owner', 'owner', 'address'], node),
-      content: pathOr('', ['asMoveObject', 'contents', 'json'], node),
+      isMythic: equals(pathOr('', ['asMoveObject', 'contents', 'json', "tier"], node), "The Mythics"),
     })),
   };
 };
@@ -89,8 +89,13 @@ export const getNFTObjects = async ({
 
   log(results.length);
 
+  const file = {
+    lasUpdateAt: Date.now(),
+    holders: results,
+  };
+
   await writeFile(
     `${__dirname}/../data/sui-play-nfts.json`,
-    JSON.stringify(results, null, 2)
+    JSON.stringify(file, null, 2)
   );
 })();
