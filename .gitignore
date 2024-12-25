@@ -46,3 +46,5 @@ Move.lock
 .idea
 .vscode
 
+# Generated
+data/
