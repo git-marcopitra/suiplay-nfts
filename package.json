@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "fetch": "tsx ./src/index.ts"
+    "fetch:suiplay": "tsx ./src/index.ts",
+    "fetch:kiosk": "tsx ./src/kiosk.ts"
   },
   "keywords": [],
   "author": "",
